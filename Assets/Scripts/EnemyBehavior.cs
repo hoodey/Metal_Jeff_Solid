@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
@@ -33,7 +34,11 @@ public class EnemyBehavior : MonoBehaviour
 
     public void Investigate(GameObject other)
     {
-        //other.gameObject.transform.position;
+        //if(other.gameObject.layer == 3 && other.gameObject.Sneaking == false)
+        {
+            Vector3 newDest = new Vector3(other.gameObject.transform.position.x, transform.position.y, other.gameObject.transform.position.z);
+            agent.SetDestination(newDest);
+        }
     }
 
     public void UpdatePatrolPoint()
