@@ -18,7 +18,7 @@ public class EnemyBehavior : MonoBehaviour
 
     #region Member Variables
 
-    [SerializeField] private float speed;
+    [SerializeField] private float eSpeed;
     [SerializeField] private Transform[] PatrolPoints;
     [SerializeField] private bool patrols;
 
