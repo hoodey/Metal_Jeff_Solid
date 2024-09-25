@@ -2,17 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StaticJeff : MonoBehaviour
+public class StaticJeff
 {
-    // Start is called before the first frame update
-    void Start()
+    public static Jeff controls = new Jeff();
+    static StaticJeff()
     {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
