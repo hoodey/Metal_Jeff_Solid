@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rotationSpeed;
     Vector2 input;
     float rotationInput;
+    public bool Sneaking = false;
     //Animator animator;
     Rigidbody rb;
     #endregion
@@ -27,6 +28,15 @@ public class PlayerController : MonoBehaviour
     private void OnEnable()
     {
         StaticJeff.controls.Enable();
+        StaticJeff.controls.Standard.Sneak.performed += Sneak_performed;
+        StaticJeff.controls.Standard.Sneak.canceled += Sneak_canceled;
+    }
+
+    private void OnDisable()
+    {
+        StaticJeff.controls.Disable();
+        StaticJeff.controls.Standard.Sneak.performed -= Sneak_performed;
+        StaticJeff.controls.Standard.Sneak.canceled -= Sneak_canceled;
     }
 
     // Update is called once per frame
@@ -82,9 +92,27 @@ public class PlayerController : MonoBehaviour
 
     public void OnSneak()
     {
-        rb.velocity *= 0.5f;
+        pSpeed *= 0.5f;
+        Sneaking = true;
         //animator.SetBool("Crouching", true);
     }
 
+    public void OnSneakRelease()
+    {
 
+        
+
+    }
+    private void Sneak_performed(InputAction.CallbackContext obj)
+    {
+        pSpeed *= 0.5f;
+        Sneaking = true;
+        //animator.SetBool("Crouching", true);
+    }
+    private void Sneak_canceled(InputAction.CallbackContext obj)
+    {
+        pSpeed *= 2f;
+        Sneaking = false;
+        //animator.SetBool("Crouching", false);
+    }
 }
