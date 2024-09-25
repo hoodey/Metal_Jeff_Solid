@@ -1,18 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Sensor : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private UnityEvent<GameObject> OnEnterRadius;
+    [SerializeField] private UnityEvent OnExitRadius;
+    [SerializeField] private UnityEvent OnStayRadius;
+    private void OnTriggerEnter(Collider other)
     {
-        
+        OnEnterRadius?.Invoke(other.gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerExit(Collider other)
     {
-        
+        OnExitRadius?.Invoke();
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        OnStayRadius?.Invoke();
     }
 }
