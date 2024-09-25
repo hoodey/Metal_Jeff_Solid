@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class EnemyBehavior : MonoBehaviour
 {
     #region State Definition
-    enum State
+    public enum State
     {
         IDLE,
         PATROL,
@@ -22,9 +23,9 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private float eSpeed;
     [SerializeField] private Transform[] PatrolPoints;
     [SerializeField] private bool patrols;
-    private int currentWaypoint = 0;
+    public int currentWaypoint = 0;
     private NavMeshAgent agent;
-    private State state = State.IDLE;
+    public State state = State.IDLE;
 
     #endregion
 
@@ -35,17 +36,33 @@ public class EnemyBehavior : MonoBehaviour
         //other.gameObject.transform.position;
     }
 
-    public void Patrol()
+    public void UpdatePatrolPoint()
     {
-        if (gameObject.transform.position != PatrolPoints[currentWaypoint].position)
-        {
-            agent.destination = PatrolPoints[currentWaypoint].position;
-        }
-        else if (currentWaypoint == PatrolPoints.Length - 1)
+        if (currentWaypoint == PatrolPoints.Length - 1)
         {
             currentWaypoint = 0;
         }
-        else { currentWaypoint++; }
+        else
+        {
+            currentWaypoint++;
+        }
+    }
+    public void Patrol()
+    {
+        /*if (Mathf.Abs(gameObject.transform.position.x - PatrolPoints[currentWaypoint].position.x) > .2f && Mathf.Abs(gameObject.transform.position.z - PatrolPoints[currentWaypoint].position.z) <= .2f)
+        {
+            agent.destination = PatrolPoints[currentWaypoint].position;
+        }*/
+        
+        Vector3 destPos = new Vector3(PatrolPoints[currentWaypoint].position.x, transform.position.y, PatrolPoints[currentWaypoint].position.z);
+
+        if (transform.position == destPos)
+        {
+            UpdatePatrolPoint();
+        }
+
+        agent.SetDestination(destPos);
+
     }
 
     #endregion
