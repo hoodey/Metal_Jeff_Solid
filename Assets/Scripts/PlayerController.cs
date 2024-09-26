@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] float pSpeed;
     [SerializeField] float rotationSpeed;
+    [SerializeField] TMP_Text text;
     Vector2 input;
     float rotationInput;
     public bool Sneaking = false;
@@ -89,20 +92,6 @@ public class PlayerController : MonoBehaviour
         //animator.transform.forward = dir;
     }
 
-
-    public void OnSneak()
-    {
-        pSpeed *= 0.5f;
-        Sneaking = true;
-        //animator.SetBool("Crouching", true);
-    }
-
-    public void OnSneakRelease()
-    {
-
-        
-
-    }
     private void Sneak_performed(InputAction.CallbackContext obj)
     {
         pSpeed *= 0.5f;
@@ -114,5 +103,21 @@ public class PlayerController : MonoBehaviour
         pSpeed *= 2f;
         Sneaking = false;
         //animator.SetBool("Crouching", false);
+    }
+
+    public void OnCollisionEnter(Collision other) 
+    {
+        if (other.gameObject.layer == 6)
+        {
+            text.text = "You've been caught!";
+            //play snake sound clip here
+            StartCoroutine(RestartLevel());
+        }
+    }
+
+    IEnumerator RestartLevel()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("StealthScene01");
     }
 }
