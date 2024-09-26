@@ -25,8 +25,9 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private Transform[] PatrolPoints;
     [SerializeField] private bool patrols;
     public int currentWaypoint = 0;
-    private NavMeshAgent agent;
     public State state = State.IDLE;
+    private NavMeshAgent agent;
+    private Vector3 spawnPos;
 
     #endregion
 
@@ -36,8 +37,20 @@ public class EnemyBehavior : MonoBehaviour
     {
         //if(other.gameObject.layer == 3 && other.gameObject.Sneaking == false)
         {
-            Vector3 newDest = new Vector3(other.gameObject.transform.position.x, transform.position.y, other.gameObject.transform.position.z);
+            state = State.INVESTIGATE;
+            Vector3 newDest = new Vector3(other.transform.position.x, transform.position.y, other.transform.position.z);
             agent.SetDestination(newDest);
+            StartCoroutine(ReturnToNormal());
+        }
+    }
+
+    IEnumerator ReturnToNormal()
+    {
+        if (state == State.INVESTIGATE)
+        {
+            yield return new WaitForSeconds(5f);
+            agent.SetDestination(spawnPos);
+            state = State.IDLE;
         }
     }
 
@@ -77,6 +90,8 @@ public class EnemyBehavior : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        spawnPos = transform.position;
+        Debug.Log(spawnPos);
     }
 
     // Update is called once per frame
