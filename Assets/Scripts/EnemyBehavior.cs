@@ -24,10 +24,13 @@ public class EnemyBehavior : MonoBehaviour
     [SerializeField] private float eSpeed;
     [SerializeField] private Transform[] PatrolPoints;
     [SerializeField] private bool patrols;
+    [SerializeField] private Transform Player;
+    [SerializeField] float visionDistance;
     public int currentWaypoint = 0;
     public State state = State.IDLE;
     private NavMeshAgent agent;
     private Vector3 spawnPos;
+    private bool PlayerInSight = false;
 
     #endregion
 
@@ -56,6 +59,13 @@ public class EnemyBehavior : MonoBehaviour
             agent.SetDestination(spawnPos);
             state = State.IDLE;
         }
+
+        if (state == State.PURSUE && !PlayerInSight)
+        {
+            yield return new WaitForSeconds(5f);
+            agent.SetDestination(spawnPos);
+            state = State.IDLE;
+        }
     }
 
     public void UpdatePatrolPoint()
@@ -70,12 +80,7 @@ public class EnemyBehavior : MonoBehaviour
         }
     }
     public void Patrol()
-    {
-        /*if (Mathf.Abs(gameObject.transform.position.x - PatrolPoints[currentWaypoint].position.x) > .2f && Mathf.Abs(gameObject.transform.position.z - PatrolPoints[currentWaypoint].position.z) <= .2f)
-        {
-            agent.destination = PatrolPoints[currentWaypoint].position;
-        }*/
-        
+    {   
         Vector3 destPos = new Vector3(PatrolPoints[currentWaypoint].position.x, transform.position.y, PatrolPoints[currentWaypoint].position.z);
 
         if (transform.position == destPos)
@@ -87,6 +92,13 @@ public class EnemyBehavior : MonoBehaviour
 
     }
 
+    public void Pursue(Transform t)
+    {
+        Vector3 newDest = new Vector3(t.position.x, transform.position.y, t.position.z);
+        agent.SetDestination(newDest);
+        StartCoroutine(ReturnToNormal());
+    }
+
     #endregion
 
     #region Unity Functions
@@ -95,12 +107,15 @@ public class EnemyBehavior : MonoBehaviour
     {
         agent = GetComponent<NavMeshAgent>();
         spawnPos = transform.position;
-        Debug.Log(spawnPos);
     }
 
     // Update is called once per frame
     void Update()
     {
+
+
+
+
         switch (state)
         {
             case State.IDLE:
@@ -117,6 +132,31 @@ public class EnemyBehavior : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 directionToPlayer = (Player.position - transform.position).normalized;
+        Vector3 forwardDirection = transform.forward;
+
+        float dot = Vector3.Dot(forwardDirection, directionToPlayer);
+
+        if (dot > 0.5f)
+        {
+            RaycastHit hit;
+            Physics.Raycast(transform.position, directionToPlayer, out hit, visionDistance);
+            if (hit.transform.gameObject == Player.gameObject)
+            {
+                Debug.Log(gameObject.name + " sees the player!");
+                state = State.PURSUE;
+                Pursue(hit.transform);
+                PlayerInSight = true;
+            }
+            else
+            {
+                PlayerInSight = false;
+            }
         }
     }
 

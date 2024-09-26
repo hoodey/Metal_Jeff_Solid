@@ -7,7 +7,7 @@ public class Sensor : MonoBehaviour
 {
     [SerializeField] private UnityEvent<GameObject> OnEnterRadius;
     [SerializeField] private UnityEvent OnExitRadius;
-    [SerializeField] private UnityEvent OnStayRadius;
+    [SerializeField] private UnityEvent<GameObject> OnStayRadius;
     private void OnTriggerEnter(Collider other)
     {
         OnEnterRadius?.Invoke(other.gameObject);
@@ -20,6 +20,6 @@ public class Sensor : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        OnStayRadius?.Invoke();
+        OnStayRadius?.Invoke(other.gameObject);
     }
 }

@@ -521,7 +521,19 @@ MonoBehaviour:
       m_Calls: []
   OnStayRadius:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1593879750}
+        m_TargetAssemblyTypeName: EnemyBehavior, Assembly-CSharp
+        m_MethodName: Investigate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!135 &67277808
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -1010,7 +1022,19 @@ MonoBehaviour:
       m_Calls: []
   OnStayRadius:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1998204599}
+        m_TargetAssemblyTypeName: EnemyBehavior, Assembly-CSharp
+        m_MethodName: Investigate
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!135 &245995482
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3409,6 +3433,8 @@ MonoBehaviour:
   eSpeed: 5
   PatrolPoints: []
   patrols: 0
+  Player: {fileID: 29550546}
+  visionDistance: 100
   currentWaypoint: 0
   state: 0
 --- !u!195 &1593879751
@@ -4012,6 +4038,8 @@ MonoBehaviour:
   - {fileID: 1906384253}
   - {fileID: 2044909255}
   patrols: 1
+  Player: {fileID: 29550546}
+  visionDistance: 100
   currentWaypoint: 0
   state: 0
 --- !u!136 &1998204600
