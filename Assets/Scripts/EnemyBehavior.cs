@@ -35,12 +35,16 @@ public class EnemyBehavior : MonoBehaviour
 
     public void Investigate(GameObject other)
     {
-        //if(other.gameObject.layer == 3 && other.gameObject.Sneaking == false)
+        if (other.GetComponent<PlayerController>() != null)
         {
-            state = State.INVESTIGATE;
-            Vector3 newDest = new Vector3(other.transform.position.x, transform.position.y, other.transform.position.z);
-            agent.SetDestination(newDest);
-            StartCoroutine(ReturnToNormal());
+            PlayerController pc = other.GetComponent<PlayerController>();
+            if (pc.Sneaking == false)
+            {
+                state = State.INVESTIGATE;
+                Vector3 newDest = new Vector3(other.transform.position.x, transform.position.y, other.transform.position.z);
+                agent.SetDestination(newDest);
+                StartCoroutine(ReturnToNormal());
+            }
         }
     }
 
