@@ -31,6 +31,7 @@ public class EnemyBehavior : MonoBehaviour
     private NavMeshAgent agent;
     private Vector3 spawnPos;
     private bool PlayerInSight = false;
+    private Animator anim;
 
     #endregion
 
@@ -106,7 +107,9 @@ public class EnemyBehavior : MonoBehaviour
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
+        anim = GetComponentInChildren<Animator>();
         spawnPos = transform.position;
+        agent.speed = eSpeed;
     }
 
     // Update is called once per frame
@@ -137,6 +140,8 @@ public class EnemyBehavior : MonoBehaviour
 
     private void FixedUpdate()
     {
+        anim.SetFloat("speed", agent.velocity.magnitude);
+
         Vector3 directionToPlayer = (Player.position - transform.position).normalized;
         Vector3 forwardDirection = transform.forward;
 
@@ -157,6 +162,16 @@ public class EnemyBehavior : MonoBehaviour
             {
                 PlayerInSight = false;
             }
+        }
+    }
+
+    public void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.layer == 3)
+        {
+            eSpeed = 0f;
+            agent.speed = eSpeed;
+            anim.SetTrigger("caught");
         }
     }
 

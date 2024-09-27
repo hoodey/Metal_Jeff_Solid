@@ -16,14 +16,14 @@ public class PlayerController : MonoBehaviour
     Vector2 input;
     float rotationInput;
     public bool Sneaking = false;
-    //Animator animator;
+    Animator animator;
     Rigidbody rb;
     #endregion
     
     // Start is called before the first frame update
     void Start()
     {
-        //animator = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
         rb = GetComponentInChildren<Rigidbody>();
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
         input = StaticJeff.controls.Standard.Movement.ReadValue<Vector2>();
         rotationInput = StaticJeff.controls.Standard.Camera.ReadValue<float>() * rotationSpeed * Time.deltaTime;
 
-        //animator.SetFloat("Speed", input.magnitude);
+        animator.SetFloat("Speed", input.magnitude);
 
     }
 
@@ -89,20 +89,20 @@ public class PlayerController : MonoBehaviour
     private void RotatePlayerModel(Vector3 dir)
     {
         dir.y = 0;
-        //animator.transform.forward = dir;
+        animator.transform.forward = dir;
     }
 
     private void Sneak_performed(InputAction.CallbackContext obj)
     {
         pSpeed *= 0.5f;
         Sneaking = true;
-        //animator.SetBool("Crouching", true);
+        animator.SetBool("Crouching", true);
     }
     private void Sneak_canceled(InputAction.CallbackContext obj)
     {
         pSpeed *= 2f;
         Sneaking = false;
-        //animator.SetBool("Crouching", false);
+        animator.SetBool("Crouching", false);
     }
 
     public void OnCollisionEnter(Collision other) 
@@ -110,6 +110,7 @@ public class PlayerController : MonoBehaviour
         if (other.gameObject.layer == 6)
         {
             text.text = "You've been caught!";
+            pSpeed = 0;
             //play snake sound clip here
             StartCoroutine(RestartLevel());
         }
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator RestartLevel()
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(5f);
         SceneManager.LoadScene("StealthScene01");
     }
 }
