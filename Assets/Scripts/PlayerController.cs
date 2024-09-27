@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float pSpeed;
     [SerializeField] float rotationSpeed;
     [SerializeField] TMP_Text text;
+    [SerializeField] GameObject FollowTarget;
     Vector2 input;
     float rotationInput;
     public bool Sneaking = false;
@@ -55,8 +56,6 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         var newInput = GetCameraBasedInput(input, Camera.main);
-        
-
 
         var newVelocity = new Vector3(newInput.x * pSpeed, rb.velocity.y, newInput.z * pSpeed);
 
@@ -89,18 +88,23 @@ public class PlayerController : MonoBehaviour
     private void RotatePlayerModel(Vector3 dir)
     {
         dir.y = 0;
-        animator.transform.forward = dir;
+        if (dir != Vector3.zero)
+        {
+            animator.transform.forward = dir;
+        }
     }
 
     private void Sneak_performed(InputAction.CallbackContext obj)
     {
-        pSpeed *= 0.5f;
+        pSpeed *= 0.75f;
+        FollowTarget.transform.position = new Vector3(FollowTarget.transform.position.x, 1.4f, FollowTarget.transform.position.z);
         Sneaking = true;
         animator.SetBool("Crouching", true);
     }
     private void Sneak_canceled(InputAction.CallbackContext obj)
     {
-        pSpeed *= 2f;
+        pSpeed *= (1f/.75f);
+        FollowTarget.transform.position = new Vector3(FollowTarget.transform.position.x, 2f, FollowTarget.transform.position.z);
         Sneaking = false;
         animator.SetBool("Crouching", false);
     }
